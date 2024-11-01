@@ -12,9 +12,16 @@ exports.getProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const { name, description, price, category_id } = req.body;
+    const image = req.file ? req.file.filename : null;
 
     const newProduct = await Product.create({
-      data: { name, description, price, category_id }
+      data: { 
+        name, 
+        description, 
+        price: parseFloat(price), 
+        category_id: parseInt(category_id), 
+        image 
+      }
     });
 
     res.json(newProduct);
@@ -27,10 +34,17 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, price, category_id } = req.body;
+    const image = req.file ? req.file.filename : null;
 
     const updatedProduct = await Product.update({
       where: { id: parseInt(id) },
-      data: { name, description, price, category_id }
+      data: { 
+        name, 
+        description, 
+        price: parseFloat(price), 
+        category_id: parseInt(category_id), 
+        image 
+      }
     });
 
     if (!updatedProduct) {

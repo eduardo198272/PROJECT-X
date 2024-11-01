@@ -26,6 +26,7 @@ model Product {
   description String?
   price       Float
   category_id Int
+  image       String?  
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   category    Category @relation(fields: [category_id], references: [id])
