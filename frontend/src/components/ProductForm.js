@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/api';
 import styled from 'styled-components';
 
@@ -67,7 +67,11 @@ const ProductForm = () => {
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState(null);
+  const [existingImage, setExistingImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null); // Novo estado para armazenar a URL da imagem
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const { id } = useParams(); // Captura o ID do produto da URL
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -85,39 +89,77 @@ const ProductForm = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (id) { // Verifica se estamos em modo de edição
+      const fetchProduct = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await api.get(`/product/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const product = response.data;
+          setName(product.name);
+          setDescription(product.description);
+          setPrice(product.price);
+          setCategoryId(product.category_id);
+          setExistingImage(product.image); // Armazenar a imagem atual
+          setIsEditing(true);
+        } catch (error) {
+          console.error('Erro ao buscar produto:', error);
+        }
+      };
+
+      fetchProduct();
+    }
+  }, [id]);
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+
+    // Gerar a URL da imagem carregada
+    if (selectedImage) {
+      setImagePreview(URL.createObjectURL(selectedImage));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('category_id', categoryId);
+    if (image) {
+      formData.append('image', image);
+    } else if (existingImage) {
+      formData.append('existingImage', existingImage);
+    }
 
     try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('description', description);
-      formData.append('price', price);
-      formData.append('category_id', categoryId);
-      formData.append('image', image);
-
-      const token = localStorage.getItem('token');
-
-      await api.post('/product', formData, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      navigate('/dashboard');  
+      if (isEditing) {
+        await api.put(`/product/${id}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } else {
+        await api.post('/product', formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+      navigate('/dashboard'); // Redireciona para o dashboard após sucesso
     } catch (error) {
-      console.error('Erro ao criar produto:', error);
-      alert('Erro ao criar produto');
+      console.error('Erro ao salvar produto:', error);
     }
   };
 
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
+        <h2>{isEditing ? 'Editar Produto' : 'Adicionar Produto'}</h2>
         <Input
           type="text"
-          placeholder="Nome do Produto"
+          placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -136,7 +178,11 @@ const ProductForm = () => {
           onChange={(e) => setPrice(e.target.value)}
           required
         />
-        <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required>
+        <Select
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          required
+        >
           <option value="">Selecione uma categoria</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
@@ -146,11 +192,24 @@ const ProductForm = () => {
         </Select>
         <Input
           type="file"
-          onChange={(e) => setImage(e.target.files[0])}
-          required
+          onChange={handleImageChange} // Alterado para usar a nova função
         />
-        <Button type="submit">Criar Produto</Button>
-        <CancelButton type="button" onClick={() => navigate('/dashboard')}>Cancelar</CancelButton>
+        {imagePreview && ( // Exibe a imagem carregada antes do envio
+          <div>
+            <p>Imagem selecionada:</p>
+            <img src={imagePreview} alt="Produto" style={{ width: '100px', height: '100px' }} />
+          </div>
+        )}
+        {existingImage && !image && (
+          <div>
+            <p>Imagem atual:</p>
+            <img src={`http://localhost:3000/images/${existingImage}`} alt="Produto" style={{ width: '100px', height: '100px' }} />
+          </div>
+        )}
+        <Button type="submit">{isEditing ? 'Atualizar Produto' : 'Adicionar Produto'}</Button>
+        <CancelButton type="button" onClick={() => navigate('/dashboard')}>
+          Cancelar
+        </CancelButton>
       </Form>
     </Container>
   );
