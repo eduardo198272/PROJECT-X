@@ -1,13 +1,21 @@
 const Product = require('../models/product');
+const Category = require('../models/category');
 
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.findMany();
-    res.json(products);
+    const productsWithCategory = await Promise.all(products.map(async (product) => {
+      const category = await Category.findUnique({ where: { id: product.category_id } });
+      const categoryName = category ? category.name : 'Categoria não encontrada';  // Adiciona verificação de categoria
+      return { ...product, category_name: categoryName };
+    }));
+    res.json(productsWithCategory);
   } catch (error) {
+    console.error('Failed to fetch products', error);
     res.status(500).json({ error: 'Failed to fetch products', details: error.message });
   }
 };
+
 
 exports.createProduct = async (req, res) => {
   try {
@@ -15,12 +23,12 @@ exports.createProduct = async (req, res) => {
     const image = req.file ? req.file.filename : null;
 
     const newProduct = await Product.create({
-      data: { 
-        name, 
-        description, 
-        price: parseFloat(price), 
-        category_id: parseInt(category_id), 
-        image 
+      data: {
+        name,
+        description,
+        price: parseFloat(price),
+        category_id: parseInt(category_id),
+        image
       }
     });
 
@@ -38,12 +46,12 @@ exports.updateProduct = async (req, res) => {
 
     const updatedProduct = await Product.update({
       where: { id: parseInt(id) },
-      data: { 
-        name, 
-        description, 
-        price: parseFloat(price), 
-        category_id: parseInt(category_id), 
-        image 
+      data: {
+        name,
+        description,
+        price: parseFloat(price),
+        category_id: parseInt(category_id),
+        image
       }
     });
 

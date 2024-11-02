@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
-import styled from 'styled-components'; // Importar styled-components
+import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
@@ -50,16 +50,12 @@ const Login = ({ setToken }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted');
 
     try {
-      console.log('Payload:', { email, password });
       const response = await api.post('/login', { email, password });
-      console.log('Response:', response.data);
       const { token } = response.data;
 
       localStorage.setItem('token', token);
-      console.log('Token stored:', localStorage.getItem('token'));
       setToken(token);
       navigate('/dashboard');
     } catch (error) {
