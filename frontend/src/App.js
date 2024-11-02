@@ -37,6 +37,7 @@ const App = () => {
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/dashboard" element={isValidToken ? <Dashboard token={token} /> : <Navigate to="/login" />} />
         <Route path="/products/create" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
+        <Route path="/products/edit/:id" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} /> {/* Nova rota para edição */}
         <Route path="/" element={isValidToken ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       </Routes>
     </Router>

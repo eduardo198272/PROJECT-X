@@ -1,6 +1,22 @@
 const Product = require('../models/product');
 const Category = require('../models/category');
 
+exports.getProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findUnique({ where: { id: parseInt(id) } });
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    const category = await Category.findUnique({ where: { id: product.category_id } });
+    const categoryName = category ? category.name : 'Categoria não encontrada';
+    res.json({ ...product, category_name: categoryName });
+  } catch (error) {
+    console.error('Failed to fetch product', error);
+    res.status(500).json({ error: 'Failed to fetch product', details: error.message });
+  }
+};
+
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.findMany();
