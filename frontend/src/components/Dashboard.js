@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaUserCircle, FaSearch } from 'react-icons/fa';
 import ProductList from '../pages/ProductList';
+import { useNavigate } from 'react-router-dom';
 
 const Header = styled.header`
   display: flex;
@@ -82,6 +83,7 @@ const MenuItem = styled.a`
 
 const Dashboard = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleMouseEnter = () => setMenuOpen(true);
   const handleMouseLeave = () => setMenuOpen(false);
@@ -99,9 +101,9 @@ const Dashboard = () => {
           onMouseLeave={handleMouseLeave}
         >
           <ProfileIcon />
-          <DropdownMenu $isOpen={menuOpen}>  {/* Usando $isOpen */}
+          <DropdownMenu $isOpen={menuOpen}>
             <MenuItem href="/account">Minha Conta</MenuItem>
-            <MenuItem href="/products">Produtos</MenuItem>
+            <MenuItem onClick={() => navigate('/products/create')}>Criar Produto</MenuItem>
           </DropdownMenu>
         </Profile>
       </Header>

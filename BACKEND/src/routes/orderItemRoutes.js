@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const orderItemController = require('../controllers/orderItemController');
-const authenticateToken = require('../middleware/auth');
+const authenticateToken = require('../middleware/authenticateToken');
 
 router.get('/orderItems', authenticateToken, orderItemController.getOrderItems);
 router.post('/orderItem', authenticateToken, orderItemController.createOrderItem);

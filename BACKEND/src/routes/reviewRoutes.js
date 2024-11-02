@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const reviewController = require('../controllers/reviewController');
-const authenticateToken = require('../middleware/auth');
+const authenticateToken = require('../middleware/authenticateToken');
 
 router.get('/reviews', authenticateToken, reviewController.getReviews);
 router.post('/review', authenticateToken, reviewController.createReview);
