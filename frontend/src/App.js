@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import ProductForm from './components/ProductForm';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -35,6 +36,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/dashboard" element={isValidToken ? <Dashboard token={token} /> : <Navigate to="/login" />} />
+        <Route path="/products/create" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
         <Route path="/" element={isValidToken ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       </Routes>
     </Router>

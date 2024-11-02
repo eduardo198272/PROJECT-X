@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
-const authenticateToken = require('../middleware/auth');
+const authenticateToken = require('../middleware/authenticateToken');
 
 router.get('/categories', authenticateToken, categoryController.getCategories);
 router.post('/category', authenticateToken, categoryController.createCategory);

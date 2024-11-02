@@ -6,7 +6,7 @@ exports.getProducts = async (req, res) => {
     const products = await Product.findMany();
     const productsWithCategory = await Promise.all(products.map(async (product) => {
       const category = await Category.findUnique({ where: { id: product.category_id } });
-      const categoryName = category ? category.name : 'Categoria não encontrada';  // Adiciona verificação de categoria
+      const categoryName = category ? category.name : 'Categoria não encontrada';
       return { ...product, category_name: categoryName };
     }));
     res.json(productsWithCategory);
@@ -15,7 +15,6 @@ exports.getProducts = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products', details: error.message });
   }
 };
-
 
 exports.createProduct = async (req, res) => {
   try {
