@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaUserCircle, FaSearch } from 'react-icons/fa';
 import ProductList from '../pages/ProductList';
+import CategoryList from '../pages/CategoryList';
 import { useNavigate } from 'react-router-dom';
 
 const Header = styled.header`
@@ -65,17 +66,17 @@ const DropdownMenu = styled.div`
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
-  display: ${(props) => (props.$isOpen ? 'block' : 'none')};  // Usando $isOpen
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};  
   width: 200px;
 `;
 
 const MenuItem = styled.a`
   display: block;
-  padding: 15px 20px;  // Aumentar o padding
+  padding: 15px 20px;  
   text-decoration: none;
   color: black;
   font-size: 16px;
-
+  cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
   }
@@ -104,12 +105,14 @@ const Dashboard = () => {
           <DropdownMenu $isOpen={menuOpen}>
             <MenuItem href="/account">Minha Conta</MenuItem>
             <MenuItem onClick={() => navigate('/products/create')}>Criar Produto</MenuItem>
+            <MenuItem onClick={() => navigate('/categories/create')}>Criar Categoria</MenuItem>
           </DropdownMenu>
         </Profile>
       </Header>
       <div>
         <h1>Bem-vindo ao Dashboard</h1>
-        <ProductList />  {/* Exibe a lista de produtos */}
+        <ProductList /> 
+        <CategoryList /> 
       </div>
     </div>
   );

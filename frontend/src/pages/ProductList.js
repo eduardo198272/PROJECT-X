@@ -72,7 +72,7 @@ const ActionButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 18px;
-  color: gray;
+  color: #94A6A6;
 `;
 
 const Modal = styled.div`
