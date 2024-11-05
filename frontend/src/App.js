@@ -41,7 +41,8 @@ const App = () => {
         <Route path="/dashboard" element={isValidToken ? <Dashboard token={token} /> : <Navigate to="/login" />} />
         <Route path="/products/create" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
         <Route path="/products/edit/:id" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
-        <Route path="/categories/create" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> 
+        <Route path="/category/create" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> 
+        <Route path="/category/edit/:id" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> {/* Adicionada rota para editar categorias */}
         <Route path="/" element={isValidToken ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       </Routes>
     </Router>

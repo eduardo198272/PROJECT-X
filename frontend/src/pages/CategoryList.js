@@ -155,13 +155,8 @@ const CategoryList = () => {
     fetchCategories();
   }, [navigate]);
 
-  const getParentCategoryName = (category) => {
-    const parentCategory = categories.find(cat => cat.id === category.parent_id);
-    return parentCategory ? parentCategory.name : 'Não possui';
-  };
-
   const handleEditClick = (category) => {
-    navigate(`/categories/edit/${category.id}`, { state: { categoryId: category.id } });
+    navigate(`/category/edit/${category.id}`, { state: { categoryId: category.id } });
   };
 
   const handleDeleteClick = (category) => {
@@ -175,7 +170,7 @@ const CategoryList = () => {
       try {
         const token = localStorage.getItem('token');
 
-        const response = await api.get(`/category/${categoryToDelete.id}`, {
+        const response = await api.get(`/category/dependencies/${categoryToDelete.id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -219,7 +214,7 @@ const CategoryList = () => {
             <CardInfo>
               <CategoryName>{category.name}</CategoryName>
               <ParentCategory>
-                Categoria pai: {getParentCategoryName(category)}
+                Categoria pai: {category.parent}
               </ParentCategory>
             </CardInfo>
             <ActionButtons className="action-buttons">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/api';
 import styled from 'styled-components';
 
@@ -61,11 +61,20 @@ const CancelButton = styled(Button)`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: #f44336;
+  margin-top: 15px;
+  font-size: 14px;
+`;
+
 const CategoryForm = () => {
   const [name, setName] = useState('');
   const [parentId, setParentId] = useState('');
   const [categories, setCategories] = useState([]);
+  const [error, setError] = useState('');
+  const [initialData, setInitialData] = useState({ name: '', parent_id: '' });
   const navigate = useNavigate();
+  const { id } = useParams(); // Para verificar se estamos no modo de edição
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -79,29 +88,61 @@ const CategoryForm = () => {
         console.error('Erro ao buscar categorias:', error);
       }
     };
+    
+    const fetchCategory = async () => {
+      if (id) { // Se id existir, estamos editando uma categoria existente
+        try {
+          const token = localStorage.getItem('token');
+          const response = await api.get(`/category/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const { name, parent_id } = response.data;
+          setName(name);
+          setParentId(parent_id || '');
+          setInitialData({ name, parent_id }); // Armazena os dados iniciais
+        } catch (error) {
+          console.error('Erro ao buscar a categoria:', error);
+        }
+      }
+    };    
+
     fetchCategories();
-  }, []);
+    fetchCategory();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-
     const parsedParentId = parentId ? parseInt(parentId, 10) : null;
 
+    if (id) {
+      if (name === initialData.name && parsedParentId === initialData.parent_id) {
+        setError('O nome ou categoria pai não foram alterados.');
+        return;
+      }
+    }
+
     try {
-      await api.post('/category', { name, parent_id: parsedParentId }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      navigate('/dashboard'); 
+      if (id) {
+        await api.put(`/category/${id}`, { name, parent_id: parsedParentId }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } else {
+        await api.post('/category', { name, parent_id: parsedParentId }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+      navigate('/dashboard');
     } catch (error) {
-      console.error('Erro ao salvar categoria:', error);
+      const errorMessage = error.response?.data?.error || 'Erro ao salvar categoria.';
+      setError(errorMessage);
     }
   };
 
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <h2>Adicionar Categoria</h2>
+        <h2>{id ? 'Editar Categoria' : 'Adicionar Categoria'}</h2>
         <Input
           type="text"
           placeholder="Nome da Categoria"
@@ -120,10 +161,11 @@ const CategoryForm = () => {
             </option>
           ))}
         </Select>
-        <Button type="submit">Adicionar Categoria</Button>
+        <Button type="submit">{id ? 'Atualizar Categoria' : 'Adicionar Categoria'}</Button>
         <CancelButton type="button" onClick={() => navigate('/dashboard')}>
           Cancelar
         </CancelButton>
+        {error && <ErrorMessage>{error}</ErrorMessage>} {/* Exibe a mensagem de erro se existir */}
       </Form>
     </Container>
   );

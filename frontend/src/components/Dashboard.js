@@ -105,12 +105,11 @@ const Dashboard = () => {
           <DropdownMenu $isOpen={menuOpen}>
             <MenuItem href="/account">Minha Conta</MenuItem>
             <MenuItem onClick={() => navigate('/products/create')}>Criar Produto</MenuItem>
-            <MenuItem onClick={() => navigate('/categories/create')}>Criar Categoria</MenuItem>
+            <MenuItem onClick={() => navigate('/category/create')}>Criar Categoria</MenuItem>
           </DropdownMenu>
         </Profile>
       </Header>
       <div>
-        <h1>Bem-vindo ao Dashboard</h1>
         <ProductList /> 
         <CategoryList /> 
       </div>
