@@ -74,7 +74,7 @@ const CategoryForm = () => {
   const [error, setError] = useState('');
   const [initialData, setInitialData] = useState({ name: '', parent_id: '' });
   const navigate = useNavigate();
-  const { id } = useParams(); // Para verificar se estamos no modo de edição
+  const { id } = useParams(); 
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -90,7 +90,7 @@ const CategoryForm = () => {
     };
     
     const fetchCategory = async () => {
-      if (id) { // Se id existir, estamos editando uma categoria existente
+      if (id) { 
         try {
           const token = localStorage.getItem('token');
           const response = await api.get(`/category/${id}`, {
@@ -99,7 +99,7 @@ const CategoryForm = () => {
           const { name, parent_id } = response.data;
           setName(name);
           setParentId(parent_id || '');
-          setInitialData({ name, parent_id }); // Armazena os dados iniciais
+          setInitialData({ name, parent_id }); 
         } catch (error) {
           console.error('Erro ao buscar a categoria:', error);
         }
@@ -165,7 +165,7 @@ const CategoryForm = () => {
         <CancelButton type="button" onClick={() => navigate('/dashboard')}>
           Cancelar
         </CancelButton>
-        {error && <ErrorMessage>{error}</ErrorMessage>} {/* Exibe a mensagem de erro se existir */}
+        {error && <ErrorMessage>{error}</ErrorMessage>} 
       </Form>
     </Container>
   );

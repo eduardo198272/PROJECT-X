@@ -42,7 +42,7 @@ const App = () => {
         <Route path="/products/create" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
         <Route path="/products/edit/:id" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
         <Route path="/category/create" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> 
-        <Route path="/category/edit/:id" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> {/* Adicionada rota para editar categorias */}
+        <Route path="/category/edit/:id" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> 
         <Route path="/" element={isValidToken ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
