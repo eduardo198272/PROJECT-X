@@ -68,10 +68,10 @@ const ProductForm = () => {
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null); // Novo estado para armazenar a URL da imagem
+  const [imagePreview, setImagePreview] = useState(null); 
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams(); // Captura o ID do produto da URL
+  const { id } = useParams(); 
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -90,7 +90,7 @@ const ProductForm = () => {
   }, []);
 
   useEffect(() => {
-    if (id) { // Verifica se estamos em modo de edição
+    if (id) { 
       const fetchProduct = async () => {
         try {
           const token = localStorage.getItem('token');
@@ -102,7 +102,7 @@ const ProductForm = () => {
           setDescription(product.description);
           setPrice(product.price);
           setCategoryId(product.category_id);
-          setExistingImage(product.image); // Armazenar a imagem atual
+          setExistingImage(product.image); 
           setIsEditing(true);
         } catch (error) {
           console.error('Erro ao buscar produto:', error);
@@ -147,7 +147,7 @@ const ProductForm = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
-      navigate('/dashboard'); // Redireciona para o dashboard após sucesso
+      navigate('/dashboard');
     } catch (error) {
       console.error('Erro ao salvar produto:', error);
     }
@@ -192,9 +192,9 @@ const ProductForm = () => {
         </Select>
         <Input
           type="file"
-          onChange={handleImageChange} // Alterado para usar a nova função
+          onChange={handleImageChange} 
         />
-        {imagePreview && ( // Exibe a imagem carregada antes do envio
+        {imagePreview && ( 
           <div>
             <p>Imagem selecionada:</p>
             <img src={imagePreview} alt="Produto" style={{ width: '100px', height: '100px' }} />
