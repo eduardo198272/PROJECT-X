@@ -12,6 +12,14 @@ const ProductContainer = styled.div`
   padding: 20px;
 `;
 
+const Container = styled.div`
+  padding: 20px;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 20px;
+`;
+
 const ProductCard = styled.div`
   position: relative;
   background: #fff;
@@ -72,7 +80,7 @@ const ActionButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 18px;
-  color: gray;
+  color: #94A6A6;
 `;
 
 const Modal = styled.div`
@@ -177,39 +185,42 @@ const ProductList = () => {
   };  
 
   return (
-    <ProductContainer>
-      {products.map((product) => (
-        <ProductCard key={product.id}>
-          <ProductImage src={`http://localhost:3000/images/${product.image}`} alt={product.name} />
-          <ProductInfo>
-            <ProductName>{product.name}</ProductName>
-            <ProductDescription>{product.description}</ProductDescription>
-            <ProductPrice>R${product.price.toFixed(2)}</ProductPrice>
-            <ProductCategory>Categoria: {product.category_name}</ProductCategory>
-          </ProductInfo>
-          <ActionButtons className="action-buttons">
-            <ActionButton className="edit" onClick={() => handleEditClick(product)}>
-              <FontAwesomeIcon icon={faEdit} />
-            </ActionButton>
-            <ActionButton className="delete" onClick={() => handleDeleteClick(product)}>
-              <FontAwesomeIcon icon={faTrash} />
-            </ActionButton>
-          </ActionButtons>
-        </ProductCard>
-      ))}
+    <Container>
+      <Title>Produtos</Title>
+      <ProductContainer>
+        {products.map((product) => (
+          <ProductCard key={product.id}>
+            <ProductImage src={`http://localhost:3000/images/${product.image}`} alt={product.name} />
+            <ProductInfo>
+              <ProductName>{product.name}</ProductName>
+              <ProductDescription>{product.description}</ProductDescription>
+              <ProductPrice>R${product.price.toFixed(2)}</ProductPrice>
+              <ProductCategory>Categoria: {product.category_name}</ProductCategory>
+            </ProductInfo>
+            <ActionButtons className="action-buttons">
+              <ActionButton className="edit" onClick={() => handleEditClick(product)}>
+                <FontAwesomeIcon icon={faEdit} />
+              </ActionButton>
+              <ActionButton className="delete" onClick={() => handleDeleteClick(product)}>
+                <FontAwesomeIcon icon={faTrash} />
+              </ActionButton>
+            </ActionButtons>
+          </ProductCard>
+        ))}
 
-      {showModal && (
-        <Modal>
-          <ModalContent>
-            <p>Tem certeza de que deseja excluir este produto?</p>
-            <ModalButtons>
-              <ModalButton onClick={confirmDelete}>Sim</ModalButton>
-              <ModalButton onClick={cancelDelete}>Não</ModalButton>
-            </ModalButtons>
-          </ModalContent>
-        </Modal>
-      )}
-    </ProductContainer>
+        {showModal && (
+          <Modal>
+            <ModalContent>
+              <p>Tem certeza de que deseja excluir este produto?</p>
+              <ModalButtons>
+                <ModalButton onClick={confirmDelete}>Sim</ModalButton>
+                <ModalButton onClick={cancelDelete}>Não</ModalButton>
+              </ModalButtons>
+            </ModalContent>
+          </Modal>
+        )}
+      </ProductContainer>
+    </Container>
   );
 };
 

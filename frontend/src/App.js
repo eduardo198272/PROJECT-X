@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import ProductForm from './components/ProductForm';
+import CategoryForm from './components/CategoryForm'; 
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -37,7 +40,9 @@ const App = () => {
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/dashboard" element={isValidToken ? <Dashboard token={token} /> : <Navigate to="/login" />} />
         <Route path="/products/create" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
-        <Route path="/products/edit/:id" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} /> {/* Nova rota para edição */}
+        <Route path="/products/edit/:id" element={isValidToken ? <ProductForm /> : <Navigate to="/login" />} />
+        <Route path="/category/create" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> 
+        <Route path="/category/edit/:id" element={isValidToken ? <CategoryForm /> : <Navigate to="/login" />} /> {/* Adicionada rota para editar categorias */}
         <Route path="/" element={isValidToken ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
